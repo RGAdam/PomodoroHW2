@@ -1,10 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pomodoro</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Pomodoro Timer</h1>
+    </header>
 
-</body>
+    <div class="timer-container">
+      <p>Pomodoro 1</p>
+      <p>25:00</p>
+    </div>
+
+    <div class="operator-buttons-container">
+      <button id="start-pause-button" type="button">Start</button>
+      <button id="reset-button" type="button">Reset</button>
+    </div>
+
+    <div class="settings-container">
+      <div class="pomodoro-settings">
+        <p>Pomodoro</p>
+        <p id="pomodoro-time-setting">25:00</p>
+        <button class="plus-button" type="button">-</button>
+        <button class="minus-button" type="button">+</button>
+      </div>
+
+      <div class="short-break-settings">
+        <p>Short Break</p>
+        <p id="short-break-time-setting">05:00</p>
+        <button class="plus-button" type="button">-</button>
+        <button class="minus-button" type="button">+</button>
+      </div>
+
+      <div class="long-break-settings">
+        <p>Long break</p>
+        <p id="long-break-time-setting">25:00</p>
+        <button class="plus-button" type="button">-</button>
+        <button class="minus-button" type="button">+</button>
+      </div>
+    </div>
+  </body>
 </html>
