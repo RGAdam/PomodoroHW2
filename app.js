@@ -51,7 +51,7 @@ function startCountdown() {
   start_btn.hidden = true;
   pause_btn.hidden = false;
 
-  activateSettings();
+  disableSettings();
 
   if (isTimerPaused) {
     isTimerPaused = false;
@@ -68,7 +68,7 @@ function startCountdown() {
         pause_btn.hidden = true;
         start_btn.hidden = false;
 
-        disableSettings();
+        activateSettings();
       }
     }
   }, 1000);
@@ -91,7 +91,7 @@ function resetCountdown() {
   start_btn.hidden = false;
   pause_btn.hidden = true;
 
-  disableSettings();
+  activateSettings();
 
   timer_p.innerHTML = pomodoroTime_p.innerHTML;
   pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
@@ -130,7 +130,7 @@ function decreaseLongBreakSetting() {
   }
 }
 
-function activateSettings() {
+function disableSettings() {
   pomodoroPlus_btn.disabled = true;
   pomodoroMinus_btn.disabled = true;
   shortBreakPlus_btn.disabled = true;
@@ -138,8 +138,7 @@ function activateSettings() {
   longBreakPlus_btn.disabled = true;
   longBreakMinus_btn.disabled = true;
 }
-
-function disableSettings() {
+function activateSettings() {
   pomodoroPlus_btn.disabled = false;
   pomodoroMinus_btn.disabled = false;
   shortBreakPlus_btn.disabled = false;
