@@ -31,9 +31,10 @@ let pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
 let shortBreakTime = parseInt(shortBreak_p.innerHTML) * 60000;
 let longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
 
-let interval;
 let isTimerPaused = false;
-let temp;
+let interval, temp;
+let pomodoroCount = 1;
+let currentPeriod = "pomodoro";
 
 function padTo2Digits(num) {
   return num.toString().padStart(2, "0");
@@ -59,16 +60,34 @@ function startCountdown() {
   }
 
   interval = setInterval(function () {
-    if (!isTimerPaused) {
+    if (!isTimerPaused && currentPeriod === "pomodoro") {
       pomodoroTime -= 1000;
+      periodTitle_p.innerHTML = "Pomodoro " + pomodoroCount;
       timer_p.innerHTML = convertMsToMinutesSeconds(pomodoroTime);
-
-      if (pomodoroTime <= 0) {
-        clearInterval(interval);
-        pause_btn.hidden = true;
-        start_btn.hidden = false;
-
-        activateSettings();
+      if (pomodoroTime === 0 && !(pomodoroCount % 4)) {
+        currentPeriod = "longbreak";
+        longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
+      } else if (pomodoroTime === 0) {
+        currentPeriod = "shortbreak";
+        shortBreakTime = parseInt(shortBreak_p.innerHTML) * 60000;
+      }
+    } else if (!isTimerPaused && currentPeriod === "shortbreak") {
+      shortBreakTime -= 1000;
+      periodTitle_p.innerHTML = "Short Break";
+      timer_p.innerHTML = convertMsToMinutesSeconds(shortBreakTime);
+      if (shortBreakTime === 0) {
+        currentPeriod = "pomodoro";
+        pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
+        pomodoroCount++;
+      }
+    } else if (!isTimerPaused && currentPeriod === "longbreak") {
+      longBreakTime -= 1000;
+      periodTitle_p.innerHTML = "Long Break";
+      timer_p.innerHTML = convertMsToMinutesSeconds(longBreakTime);
+      if (longBreakTime === 0) {
+        currentPeriod = "pomodoro";
+        pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
+        pomodoroCount++;
       }
     }
   }, 1000);
@@ -95,6 +114,8 @@ function resetCountdown() {
 
   timer_p.innerHTML = pomodoroTime_p.innerHTML;
   pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
+  pomodoroCount = 1;
+  currentPeriod = "pomodoro";
 }
 
 function increasePomodoroSetting() {
