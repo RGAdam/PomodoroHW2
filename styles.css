@@ -32,11 +32,11 @@ header > h1 {
   text-align: center;
 }
 
-#actual-period-title {
+.actual-period-title {
   padding-top: 50px;
 }
 
-#timer {
+.timer {
   padding-top: 10px;
   font-size: 50px;
 }
@@ -46,13 +46,18 @@ header > h1 {
   padding: 40px;
 }
 
-#start-pause-button,
-#reset-button {
+.start-button,
+.pause-button,
+.reset-button {
   margin: 0 10px;
   padding: 10px 20px;
   background-color: white;
   border: 1px solid black;
   border-radius: 0;
+}
+
+button:active {
+  background-color: gray;
 }
 
 /* Settings */
@@ -79,4 +84,9 @@ header > h1 {
   background-color: black;
   border: none;
   border-radius: 50%;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
