@@ -1,14 +1,15 @@
+// ---------------- DOM Cache ----------------
 const periodTitle_p = document.querySelector(".actual-period-title");
 const timer_p = document.querySelector(".timer");
 
 const halfCircles = document.querySelectorAll(".half-circle");
 const halfCircleTop = document.querySelector(".half-circle-top");
-const progressBarCircle = document.querySelector(".progressbar-circle");
 
 const pomodoroSettings_div = document.querySelector(".pomodoro-settings");
 const shortBreakSettings_div = document.querySelector(".short-break-settings");
 const longBreakSettings_div = document.querySelector(".long-break-settings");
 
+// Need this to be able to change
 let pomodoroTime_p = pomodoroSettings_div.querySelector(
   ".pomodoro-time-setting"
 );
@@ -30,7 +31,9 @@ const longBreakMinus_btn = longBreakSettings_div.querySelector(".minus-button");
 const start_btn = document.querySelector(".start-button");
 const pause_btn = document.querySelector(".pause-button");
 const reset_btn = document.querySelector(".reset-button");
+// ---------------- DOM Cache End ----------------
 
+// declaring necessary variables
 let pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
 let shortBreakTime = parseInt(shortBreak_p.innerHTML) * 60000;
 let longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
@@ -41,9 +44,12 @@ let percentage = 100;
 let pomodoroCount = 1;
 let currentPeriod = "pomodoro";
 
+// makes it so one-digit numbers appear as two-digit ones with a 0 in front
 function padTo2Digits(num) {
   return num.toString().padStart(2, "0");
 }
+
+// converts and formats milliseconds into minutes and seconds
 function convertMsToMinutesSeconds(milliseconds) {
   const minutes = Math.floor(milliseconds / 60000);
   const seconds = Math.round((milliseconds % 60000) / 1000);
@@ -52,14 +58,20 @@ function convertMsToMinutesSeconds(milliseconds) {
     ? `${minutes + 1}:00`
     : `${minutes}:${padTo2Digits(seconds)}`;
 }
+
+// converts minutes and seconds into milliseconds
 function convertMinSecToMS(string) {
   let stringParts = string.split(":");
 
   return (stringParts[0] * 60 + stringParts[1]) * 10;
 }
+
+// calculates the percentage of a value based on another one
 function calculatePercentage(percentageValue, maxPercentageValue) {
   return 100 - (percentageValue / convertMinSecToMS(maxPercentageValue)) * 100;
 }
+
+// sets the circle's degree of rotation accordingly to how time is elapsed
 function setProgressBar(percentage) {
   let degreeBasedOnPercentage = (percentage / 100) * 360;
 
@@ -75,33 +87,45 @@ function setProgressBar(percentage) {
   });
 }
 
+// starts the pomodoro timer
 function startCountdown() {
   start_btn.hidden = true;
   pause_btn.hidden = false;
 
   disableSettings();
 
+  // if the timer is paused, this will let it continue from where it was paused
   if (isTimerPaused) {
     isTimerPaused = false;
     pomodoroTime = temp;
   }
 
+  // set an internal with a value of 1 second
   interval = setInterval(function () {
+    // if the timer wasn't paused and the current period is pomodoro,
+    // this starts the timer from the value that is set
     if (!isTimerPaused && currentPeriod === "pomodoro") {
       pomodoroTime -= 1000;
+      // calculates and sets how the circle should be filled
       percentage = calculatePercentage(pomodoroTime, pomodoroTime_p.innerHTML);
       setProgressBar(percentage);
 
       periodTitle_p.innerHTML = "Pomodoro " + pomodoroCount;
       timer_p.innerHTML = convertMsToMinutesSeconds(pomodoroTime);
+      // if the pomodoro timer reaches zero, and it was the fourth (or 8th, 12th, 16th...)
+      // it initializes a long break timer
       if (pomodoroTime === 0 && !(pomodoroCount % 4)) {
         currentPeriod = "longbreak";
         longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
-      } else if (pomodoroTime === 0) {
+      }
+      // otherwise initializes a short break timer
+      else if (pomodoroTime === 0) {
         currentPeriod = "shortbreak";
         shortBreakTime = parseInt(shortBreak_p.innerHTML) * 60000;
       }
-    } else if (!isTimerPaused && currentPeriod === "shortbreak") {
+    }
+    // starts a short break timer, if the next period is a short break
+    else if (!isTimerPaused && currentPeriod === "shortbreak") {
       shortBreakTime -= 1000;
       percentage = calculatePercentage(shortBreakTime, shortBreak_p.innerHTML);
       setProgressBar(percentage);
@@ -113,7 +137,9 @@ function startCountdown() {
         pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
         pomodoroCount++;
       }
-    } else if (!isTimerPaused && currentPeriod === "longbreak") {
+    }
+    // starts a long break timer, if the next period is a long break
+    else if (!isTimerPaused && currentPeriod === "longbreak") {
       longBreakTime -= 1000;
       percentage = calculatePercentage(longBreakTime, longBreak_p.innerHTML);
       setProgressBar(percentage);
@@ -128,6 +154,8 @@ function startCountdown() {
     }
   }, 1000);
 }
+
+// saves the timer's position if it gets paused
 function pauseCountdown() {
   if (isTimerPaused) {
     pomodoroTime = temp;
@@ -139,6 +167,8 @@ function pauseCountdown() {
     isTimerPaused = true;
   }
 }
+
+// resets the timer, without resetting the settings the user gave
 function resetCountdown() {
   clearInterval(interval);
 
@@ -146,7 +176,7 @@ function resetCountdown() {
   start_btn.hidden = false;
   pause_btn.hidden = true;
 
-  activateSettings();
+  enableSettings();
 
   timer_p.innerHTML = pomodoroTime_p.innerHTML;
   pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
@@ -154,6 +184,7 @@ function resetCountdown() {
   currentPeriod = "pomodoro";
 }
 
+// functions for the +/- button
 function increasePomodoroSetting() {
   pomodoroTime += 60000;
   pomodoroTime_p.innerHTML = convertMsToMinutesSeconds(pomodoroTime);
@@ -187,6 +218,7 @@ function decreaseLongBreakSetting() {
   }
 }
 
+// disable or enable all setting buttons in one line
 function disableSettings() {
   pomodoroPlus_btn.disabled = true;
   pomodoroMinus_btn.disabled = true;
@@ -195,7 +227,7 @@ function disableSettings() {
   longBreakPlus_btn.disabled = true;
   longBreakMinus_btn.disabled = true;
 }
-function activateSettings() {
+function enableSettings() {
   pomodoroPlus_btn.disabled = false;
   pomodoroMinus_btn.disabled = false;
   shortBreakPlus_btn.disabled = false;
@@ -204,9 +236,8 @@ function activateSettings() {
   longBreakMinus_btn.disabled = false;
 }
 
-function main() {
-  timer_p.innerHTML = pomodoroTime_p.innerHTML;
-
+// adds event listeners to all the buttons
+function addEventListeners() {
   start_btn.addEventListener("click", startCountdown);
   pause_btn.addEventListener("click", pauseCountdown);
   reset_btn.addEventListener("click", resetCountdown);
@@ -219,4 +250,4 @@ function main() {
   longBreakMinus_btn.addEventListener("click", decreaseLongBreakSetting);
 }
 
-main();
+addEventListeners();

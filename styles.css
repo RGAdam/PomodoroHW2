@@ -75,21 +75,6 @@ header > h1 {
   z-index: 10;
 }
 
-.circle:hover .half-circle:nth-child(1) {
-  transform: rotate(180deg);
-  transition: transform 1s linear;
-}
-
-.circle:hover .half-circle:nth-child(2) {
-  transform: rotate(360deg);
-  transition: transform 2s linear;
-}
-
-.circle:hover .half-circle-top {
-  opacity: 0;
-  transition: opacity 0s 1s;
-}
-
 .actual-period-title {
   padding-top: 50px;
 }
