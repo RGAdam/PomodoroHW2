@@ -34,8 +34,8 @@ header > h1 {
 }
 
 .circle {
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   background-color: black;
   border-radius: 50%;
   position: fixed;
