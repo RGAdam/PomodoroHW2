@@ -1,6 +1,10 @@
 const periodTitle_p = document.querySelector(".actual-period-title");
 const timer_p = document.querySelector(".timer");
 
+const halfCircles = document.querySelectorAll(".half-circle");
+const halfCircleTop = document.querySelector(".half-circle-top");
+const progressBarCircle = document.querySelector(".progressbar-circle");
+
 const pomodoroSettings_div = document.querySelector(".pomodoro-settings");
 const shortBreakSettings_div = document.querySelector(".short-break-settings");
 const longBreakSettings_div = document.querySelector(".long-break-settings");
@@ -33,6 +37,7 @@ let longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
 
 let isTimerPaused = false;
 let interval, temp;
+let percentage = 100;
 let pomodoroCount = 1;
 let currentPeriod = "pomodoro";
 
@@ -46,6 +51,28 @@ function convertMsToMinutesSeconds(milliseconds) {
   return seconds === 60
     ? `${minutes + 1}:00`
     : `${minutes}:${padTo2Digits(seconds)}`;
+}
+function convertMinSecToMS(string) {
+  let stringParts = string.split(":");
+
+  return (stringParts[0] * 60 + stringParts[1]) * 10;
+}
+function calculatePercentage(percentageValue, maxPercentageValue) {
+  return 100 - (percentageValue / convertMinSecToMS(maxPercentageValue)) * 100;
+}
+function setProgressBar(percentage) {
+  let degreeBasedOnPercentage = (percentage / 100) * 360;
+
+  halfCircles.forEach((el) => {
+    el.style.transform = `rotate(${degreeBasedOnPercentage}deg)`;
+
+    if (degreeBasedOnPercentage >= 180) {
+      halfCircles[0].style.transform = "rotate(180deg)";
+      halfCircleTop.style.opacity = "0";
+    } else {
+      halfCircleTop.style.opacity = "1";
+    }
+  });
 }
 
 function startCountdown() {
@@ -62,6 +89,9 @@ function startCountdown() {
   interval = setInterval(function () {
     if (!isTimerPaused && currentPeriod === "pomodoro") {
       pomodoroTime -= 1000;
+      percentage = calculatePercentage(pomodoroTime, pomodoroTime_p.innerHTML);
+      setProgressBar(percentage);
+
       periodTitle_p.innerHTML = "Pomodoro " + pomodoroCount;
       timer_p.innerHTML = convertMsToMinutesSeconds(pomodoroTime);
       if (pomodoroTime === 0 && !(pomodoroCount % 4)) {
@@ -73,6 +103,9 @@ function startCountdown() {
       }
     } else if (!isTimerPaused && currentPeriod === "shortbreak") {
       shortBreakTime -= 1000;
+      percentage = calculatePercentage(shortBreakTime, shortBreak_p.innerHTML);
+      setProgressBar(percentage);
+
       periodTitle_p.innerHTML = "Short Break";
       timer_p.innerHTML = convertMsToMinutesSeconds(shortBreakTime);
       if (shortBreakTime === 0) {
@@ -82,6 +115,9 @@ function startCountdown() {
       }
     } else if (!isTimerPaused && currentPeriod === "longbreak") {
       longBreakTime -= 1000;
+      percentage = calculatePercentage(longBreakTime, longBreak_p.innerHTML);
+      setProgressBar(percentage);
+
       periodTitle_p.innerHTML = "Long Break";
       timer_p.innerHTML = convertMsToMinutesSeconds(longBreakTime);
       if (longBreakTime === 0) {
