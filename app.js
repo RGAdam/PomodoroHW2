@@ -115,11 +115,13 @@ function startCountdown() {
       // if the pomodoro timer reaches zero, and it was the fourth (or 8th, 12th, 16th...)
       // it initializes a long break timer
       if (pomodoroTime === 0 && !(pomodoroCount % 4)) {
+        new Audio("beep.mp3").play();
         currentPeriod = "longbreak";
         longBreakTime = parseInt(longBreak_p.innerHTML) * 60000;
       }
       // otherwise initializes a short break timer
       else if (pomodoroTime === 0) {
+        new Audio("beep.mp3").play();
         currentPeriod = "shortbreak";
         shortBreakTime = parseInt(shortBreak_p.innerHTML) * 60000;
       }
@@ -133,6 +135,7 @@ function startCountdown() {
       periodTitle_p.innerHTML = "Short Break";
       timer_p.innerHTML = convertMsToMinutesSeconds(shortBreakTime);
       if (shortBreakTime === 0) {
+        new Audio("beep.mp3").play();
         currentPeriod = "pomodoro";
         pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
         pomodoroCount++;
@@ -147,6 +150,7 @@ function startCountdown() {
       periodTitle_p.innerHTML = "Long Break";
       timer_p.innerHTML = convertMsToMinutesSeconds(longBreakTime);
       if (longBreakTime === 0) {
+        new Audio("beep.mp3").play();
         currentPeriod = "pomodoro";
         pomodoroTime = parseInt(pomodoroTime_p.innerHTML) * 60000;
         pomodoroCount++;
